@@ -7,53 +7,84 @@ const cors = require('koa2-cors')
 const router = require('./router.js')
 const { koaSwagger } = require('koa2-swagger-ui')
 const swagger = require('./utils/swagger.js')
-// const logger = require('./middleware/logger')
-// const requestLog = require('./middleware/requestLog')
+const responseBody = require('./middleware/response-body')
 
-async function start () {
-    let app = new Koa()
+let app = new Koa()
     // .use(logger({
     //   delegateConsole: true,
     //   separator: process.env.NODE_ENV === 'production' ? ' § ' : ' \t '
     // }))
-        .use(cors({
-            origin: '*',
-            exposeHeaders: ['Content-Range']
-        }))
-        .use(KoaBodyFile({
-            multipart: true,
-            formidable: {
-                maxFileSize: 200 * 1024 * 1024 // 设置上传文件大小最大限制，默认2M
-            }
-        }))
+    .use(cors({
+        origin: '*',
+        exposeHeaders: ['Content-Range']
+    }))
+    .use(KoaBodyFile({
+        multipart: true,
+        formidable: {
+            maxFileSize: 200 * 1024 * 1024 // 设置上传文件大小最大限制，默认2M
+        }
+    }))
+    .use(responseBody())
     // .use(requestLog())
-        .use(swagger.routes(), swagger.allowedMethods())
-        .use(
-            koaSwagger({
-                routePrefix: '/swagger', // host at /swagger instead of default /docs
-                swaggerOptions: {
-                    url: '/swagger-api.json', // example path to json
-                },
-            })
-        )
-        .use(koaBody())
-        .use(router.routes())
-        .use(router.allowedMethods())
+    .use(swagger.routes(), swagger.allowedMethods())
+    .use(
+        koaSwagger({
+            routePrefix: '/swagger', // host at /swagger instead of default /docs
+            swaggerOptions: {
+                url: '/swagger-api.json', // example path to json
+            },
+        })
+    )
+    .use(koaBody())
+    .use(router.routes())
+    .use(router.allowedMethods())
 
-    app.listen(3000, function () {
-        console.warn(`koa-demo is running port at  ${3000}~ `)
-    })
-}
 
-start().catch(err => console.error('server init error:', err))
+module.exports = app
+// async function start () {
+//     let app = new Koa()
+//     // .use(logger({
+//     //   delegateConsole: true,
+//     //   separator: process.env.NODE_ENV === 'production' ? ' § ' : ' \t '
+//     // }))
+//         .use(cors({
+//             origin: '*',
+//             exposeHeaders: ['Content-Range']
+//         }))
+//         .use(KoaBodyFile({
+//             multipart: true,
+//             formidable: {
+//                 maxFileSize: 200 * 1024 * 1024 // 设置上传文件大小最大限制，默认2M
+//             }
+//         }))
+//     // .use(requestLog())
+//         .use(swagger.routes(), swagger.allowedMethods())
+//         .use(
+//             koaSwagger({
+//                 routePrefix: '/swagger', // host at /swagger instead of default /docs
+//                 swaggerOptions: {
+//                     url: '/swagger-api.json', // example path to json
+//                 },
+//             })
+//         )
+//         .use(koaBody())
+//         .use(router.routes())
+//         .use(router.allowedMethods())
 
-function gracefulShutDown () {
-    console.warn('App exit.')
-    process.exit(1)
-}
+//     // app.listen(3000, function () {
+//     //     console.warn(`koa-demo is running port at  ${3000}~ `)
+//     // })
+// }
 
-process.on('unhandledRejection', (reason, p) => {
-    console.log('Unhandled Rejection at: Promise', p, 'reason:', reason)
-})
+// start().catch(err => console.error('server init error:', err))
 
-process.on('SIGINT', gracefulShutDown)
+// function gracefulShutDown () {
+//     console.warn('App exit.')
+//     process.exit(1)
+// }
+
+// process.on('unhandledRejection', (reason, p) => {
+//     console.log('Unhandled Rejection at: Promise', p, 'reason:', reason)
+// })
+
+// process.on('SIGINT', gracefulShutDown)

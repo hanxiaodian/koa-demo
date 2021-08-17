@@ -30,12 +30,12 @@ class UserService {
    * @returns 
    */
     async updateUser (id, body) {
-        const user = await User.update(body, {
+        await User.update(body, {
             where: {
                 id
-            }
+            },
+            returning: true
         })
-        return user
     }
 
     /**
