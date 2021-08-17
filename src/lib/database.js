@@ -7,12 +7,12 @@ const sequelize = new Sequelize('kingsoft', 'root', '1423lengyue', {
     port: 3306,
     dialect: 'mysql',
     timezone: '+08:00',
-    // logging: false,
+    logging: false,
     pool: {
         max: 50,
         min: 5,
-        acquire: 60000,
-        idle: 10000,
+        acquire: 60000, // ms；The maximum time, in milliseconds, that pool will try to get connection before throwing error
+        idle: 10000, // The maximum time, in milliseconds, that a connection can be idle before being released
     }
 })
 

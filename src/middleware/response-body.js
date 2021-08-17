@@ -1,8 +1,9 @@
 module.exports = function responseBody () {
     return async function (ctx, next) {
-        await next()
         try {
-            if (ctx.status >= 400) {
+            await next()
+            if (ctx.response.status >= 400) {
+                ctx.status = ctx.status || 404
                 ctx.body = {
                     code: ctx.status,
                     data: ctx.body,
@@ -16,6 +17,7 @@ module.exports = function responseBody () {
                 }
             }
         } catch (err) {
+            ctx.status = err.status || 500
             ctx.body = {
                 code: 500,
                 data: ctx.body,

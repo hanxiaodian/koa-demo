@@ -4,12 +4,14 @@
   "description": "koa demo",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "dev": "node src/server.js",
+    "test": "jest --detectOpenHandles --runInBand --forceExit --colors --unhandled-rejections=strict",
     "lint": "eslint src --fix"
   },
   "author": "wld",
   "license": "ISC",
   "dependencies": {
+    "http-assert": "^1.4.1",
     "koa": "^2.13.1",
     "koa-body": "^4.2.0",
     "koa-bodyparser": "^4.3.0",

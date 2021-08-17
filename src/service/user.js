@@ -19,6 +19,10 @@ class UserService {
    * @returns 
    */
     async createUser (body) {
+        body = Object.assign({
+            regTime: new Date(),
+            lastLogin: new Date()
+        }, body)
         const user = await User.create(body)
         return user
     }
