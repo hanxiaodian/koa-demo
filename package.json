@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "node src/server.js",
-    "test": "jest --detectOpenHandles --runInBand --forceExit --colors --unhandled-rejections=strict",
+    "test": "jest --detectOpenHandles --runInBand --forceExit --colors --coverage",
     "lint": "eslint src --fix"
   },
   "author": "wld",
@@ -27,7 +27,8 @@
     "husky": "^4.3.0",
     "jest": "^27.0.6",
     "lint-staged": "^11.1.2",
-    "supertest": "^6.1.5"
+    "supertest": "^6.1.5",
+    "why-is-node-running": "^2.2.0"
   },
   "husky": {
     "hooks": {

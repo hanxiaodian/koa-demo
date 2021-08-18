@@ -14,13 +14,13 @@ describe('server test', () => {
         expect(mockListen.mock.calls.length).toBe(1)
         expect(mockListen.mock.calls[0][0]).toBe(process.env.PORT || 3000)
     })
+})
 
-    afterAll(async () => {
-        // Closing the DB connection allows Jest to exit successfully.
-        try {
-            await sequelize.close();
-        } catch (err) {
-            console.error(err)
-        }
-    });
+afterAll(async () => {
+    // Closing the DB connection allows Jest to exit successfully.
+    try {
+        await sequelize.close();
+    } catch (err) {
+        console.error(err)
+    }
 })

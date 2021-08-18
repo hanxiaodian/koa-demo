@@ -1,4 +1,4 @@
-const server = require('../server')
+const { sequelize } = require('../../src/lib/database')
 
 describe('user route success test', () => {
     let user = {
@@ -9,7 +9,7 @@ describe('user route success test', () => {
         "lastLogin": new Date()
     }
     test('create user', async () => {
-        const response = await server.post('/user').send(user)
+        const response = await global.server.post('/user').send(user)
         expect(response.status).toBe(200)
         expect(response.body.code).toBe(0)
         expect(response.body.data.nickName).toEqual(user.nickName)
@@ -22,7 +22,7 @@ describe('user route success test', () => {
 
 
     test('get user', async () => {
-        const response = await server.get('/user').query({ id: user.id })
+        const response = await global.server.get('/user').query({ id: user.id })
         expect(response.status).toBe(200)
         expect(response.body.data.id).toEqual(user.id)
         expect(response.body.data.nickName).toEqual(user.nickName)
@@ -36,12 +36,12 @@ describe('user route success test', () => {
         let updateInfo = {
             nickName: 'update nickName'
         }
-        const response = await server.put(`/user/${user.id}`).send(updateInfo)
+        const response = await global.server.put(`/user/${user.id}`).send(updateInfo)
         expect(response.status).toBe(204)
     })
 
     test('delete user', async () => {
-        const response = await server.delete(`/user/${user.id}`)
+        const response = await global.server.delete(`/user/${user.id}`)
         expect(response.status).toBe(200)
         expect(response.body.data).toEqual(1)
     })
@@ -53,13 +53,22 @@ describe('user route failure test', () => {
         "country": "China"
     }
     test('create user 400', async () => {
-        const response = await server.post('/user').send(user)
+        const response = await global.server.post('/user').send(user)
         expect(response.status).toBe(400)
     })
 
 
     test('get user 404', async () => {
-        const response = await server.get('/404')
+        const response = await global.server.get('/404')
         expect(response.status).toBe(404)
     })
+})
+
+afterAll(async () => {
+    // Closing the DB connection allows Jest to exit successfully.
+    try {
+        await sequelize.close()
+    } catch (err) {
+        console.error(err)
+    }
 })
