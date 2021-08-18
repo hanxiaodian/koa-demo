@@ -2,6 +2,7 @@ module.exports = function responseBody () {
     return async function (ctx, next) {
         try {
             await next()
+            if (/^\/swagger/.test(ctx.request.url)) return
             if (ctx.response.status >= 400) {
                 ctx.status = ctx.status || 404
                 ctx.body = {

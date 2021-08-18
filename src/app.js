@@ -8,12 +8,14 @@ const router = require('./router.js')
 const { koaSwagger } = require('koa2-swagger-ui')
 const swagger = require('./utils/swagger.js')
 const responseBody = require('./middleware/response-body')
+const logger = require('./middleware/logger')
+const requestLog = require('./middleware/requestLog')
 
 let app = new Koa()
-    // .use(logger({
-    //   delegateConsole: true,
-    //   separator: process.env.NODE_ENV === 'production' ? ' § ' : ' \t '
-    // }))
+    .use(logger({
+        delegateConsole: true,
+        separator: process.env.NODE_ENV === 'production' ? ' § ' : ' \t '
+    }))
     .use(cors({
         origin: '*',
         exposeHeaders: ['Content-Range']
@@ -24,8 +26,8 @@ let app = new Koa()
             maxFileSize: 200 * 1024 * 1024 // 设置上传文件大小最大限制，默认2M
         }
     }))
+    .use(requestLog())
     .use(responseBody())
-    // .use(requestLog())
     .use(swagger.routes(), swagger.allowedMethods())
     .use(
         koaSwagger({

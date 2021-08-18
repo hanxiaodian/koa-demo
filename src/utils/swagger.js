@@ -21,7 +21,7 @@ const swaggerSpec = swaggerJSDoc(options)
 // 通过路由获取生成的注解文件
 router.get('/swagger-api.json', async function (ctx) {
     ctx.set('Content-Type', 'application/json')
-    ctx.body = swaggerSpec
+    ctx.body = process.env.NODE_ENV !== 'production' ? swaggerSpec : 'hello, world'
 })
 
 module.exports = router
